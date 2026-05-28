@@ -1,14 +1,14 @@
 """
 run_pipeline.py
-Orquesta el pipeline ETL completo: Extract → Transform → Load
+Orquesta el pipeline ETL completo: Extract → Transform → Load → Reportes
 Uso:  python run_pipeline.py
 """
 
 import sys
 import time
+import subprocess
 from pathlib import Path
 
-# Agrega la raíz del proyecto al path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from etl import extract, transform, load
@@ -24,6 +24,9 @@ def main():
         extract.run()
         transform.run()
         load.run()
+
+        print("\n=== REPORTES ===")
+        subprocess.run([sys.executable, "consultas.py"], check=True)
 
         elapsed = time.time() - start
         print("=" * 50)
