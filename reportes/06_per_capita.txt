@@ -1,0 +1,21 @@
+ departamento  gpc_municipal  gpc_domiciliario
+       CALLAO         0.9675            0.6775
+   SAN MARTIN         0.8339            0.5832
+      UCAYALI         0.8139            0.5683
+         LIMA         0.7875            0.5517
+        LIMA          0.7854            0.5502
+MADRE DE DIOS         0.7756            0.5425
+   LAMBAYEQUE         0.7634            0.5347
+       LORETO         0.7585            0.5297
+        PIURA         0.7432            0.5202
+          ICA         0.7400            0.5187
+       TUMBES         0.7236            0.5064
+  LA LIBERTAD         0.7048            0.4938
+     MOQUEGUA         0.7038            0.4938
+      HUANUCO         0.6836            0.4791
+     AMAZONAS         0.6807            0.4763
+     AREQUIPA         0.6736            0.4720
+        CUSCO         0.6650            0.4657
+       ANCASH         0.6612            0.4637
+     APURIMAC         0.6574            0.4614
+    CAJAMARCA         0.6572            0.4610

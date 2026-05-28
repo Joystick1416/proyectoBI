@@ -1,0 +1,11 @@
+                 lugar  tasa_2019  tasa_2024  mejora
+VARGAS GUERRA (LORETO)       2.12      80.91   78.78
+        POZUZO (PASCO)       0.00      77.07   77.07
+   CALLAHUANCA (LIMA )       0.84      77.62   76.77
+    CALLAHUANCA (LIMA)       0.84      77.62   76.77
+   PUNTA NEGRA (LIMA )       0.08      73.13   73.05
+    PUNTA NEGRA (LIMA)       0.08      73.13   73.05
+         VITOC (JUNIN)       0.00      44.98   44.98
+        SATIPO (JUNIN)      16.73      61.51   44.78
+ LUYA VIEJO (AMAZONAS)       1.55      43.39   41.84
+    MIRAFLORES (LIMA )       0.19      40.84   40.65

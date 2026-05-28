@@ -1,0 +1,11 @@
+                           lugar  valorizado_t  tasa_pct
+               SOLOCO (AMAZONAS)          13.0     26.47
+                  POZUZO (PASCO)          49.1     22.89
+                 YUNGAR (ANCASH)          20.0     12.28
+EL CARMEN DE LA FRONTERA (PIURA)           7.5     10.94
+             TALAVERA (APURIMAC)         210.5      6.80
+                 BARRANCO (LIMA)         608.1      6.71
+                BARRANCO (LIMA )         608.1      6.71
+            TAMBO GRANDE (PIURA)         795.4      6.55
+   CASTROVIRREYNA (HUANCAVELICA)          19.4      5.97
+                HUAYA (AYACUCHO)          10.6      5.71

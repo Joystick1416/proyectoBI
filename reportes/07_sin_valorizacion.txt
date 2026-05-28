@@ -1,0 +1,4 @@
+region_natural  sin_valorizacion
+        SIERRA              1148
+         SELVA               272
+         COSTA               199

@@ -1,0 +1,5 @@
+tipo_municipalidad tipo_residuo  n_distritos  total_t  tasa_promedio
+         DISTRITAL   INORGANICO         1695  84206.6           0.25
+         DISTRITAL     ORGANICO         1695  68397.6           1.29
+        PROVINCIAL   INORGANICO          196  33283.8           0.83
+        PROVINCIAL     ORGANICO          196  54168.6           5.03

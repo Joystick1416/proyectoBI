@@ -1,0 +1,11 @@
+                           lugar  tasa_2019  tasa_2024  mejora
+               SOLOCO (AMAZONAS)       0.00      26.47   26.47
+                  POZUZO (PASCO)       0.00      22.89   22.89
+                 YUNGAR (ANCASH)       0.00      12.28   12.28
+EL CARMEN DE LA FRONTERA (PIURA)       0.00      10.94   10.94
+   CASTROVIRREYNA (HUANCAVELICA)       0.00       5.97    5.97
+                HUAYA (AYACUCHO)       0.00       5.71    5.71
+               HUALLA (AYACUCHO)       0.00       5.71    5.71
+                 AZANGARO (PUNO)       0.21       4.82    4.61
+             TALAVERA (APURIMAC)       2.25       6.80    4.55
+           LAS AMAZONAS (LORETO)       0.00       4.51    4.51

@@ -1,0 +1,13 @@
+ anio tipo_residuo  generado_t  valorizado_t  tasa_pct
+ 2019   INORGANICO   7781904.3       56888.2      0.73
+ 2020   INORGANICO   7905118.1       24846.8      0.31
+ 2021   INORGANICO   8214356.0       80250.8      0.98
+ 2022   INORGANICO   8455715.4       78804.6      0.93
+ 2023   INORGANICO   8706237.4       74046.5      0.85
+ 2024   INORGANICO   8994762.8      117490.4      1.31
+ 2019     ORGANICO   7781904.3       27174.4      0.35
+ 2020     ORGANICO   7905118.1       34174.8      0.43
+ 2021     ORGANICO   8214356.0       68245.9      0.83
+ 2022     ORGANICO   8455715.4       69754.5      0.82
+ 2023     ORGANICO   8706237.4      110115.3      1.26
+ 2024     ORGANICO   8994762.5      122566.2      1.36
