@@ -1,24 +1,29 @@
 # Anális de Residuos Sólidos Perú 2019–2024 mediante técnicas de BI
 
+**Integrantes:**
+- Marx Rojas Rojas
+- Joyssie Rivas Ríos
+
+**Curso:** Business Intelligence
+**Universidad:** Universidad del Pacífico
+**Ciclo:** 2026-I
+
 ---
 
 ## 1. Marco Teórico
 
 ### 1.1 Business Intelligence
-
-El Business Intelligence (BI) comprende el conjunto de metodologías y tecnologías que permiten transformar datos en bruto en información significativa para la toma de decisiones estratégicas. A través del BI, las organizaciones pueden analizar el comportamiento histórico de sus procesos, identificar tendencias y anticipar escenarios futuros con base en evidencia. En el presente trabajo, el BI se aplica sobre los datos de SIGERSOL para dotar al MINAM de una herramienta analítica que facilite el monitoreo de la gestión de residuos sólidos a nivel nacional.
+El Business Intelligence (BI) comprende las metodologías y tecnologías que permiten transformar datos en bruto en información significativa para la toma de decisiones estratégicas (Negash, 2004). En el presente trabajo, el BI se aplica sobre los datos de SIGERSOL para dotar al MINAM de una herramienta analítica que facilite el monitoreo de la gestión de residuos sólidos a nivel nacional.
 
 ### 1.2 OLAP y Modelo Dimensional
+OLAP (On-Line Analytical Processing) agiliza la consulta de grandes volúmenes de datos mediante estructuras multidimensionales, permitiendo analizar causas, encontrar patrones y obtener respuestas rápidas a preguntas complejas (Codd et al., 1993).
 
-OLAP (On-Line Analytical Processing) es una solución de BI que agiliza la consulta de grandes volúmenes de datos mediante estructuras multidimensionales, permitiendo analizar causas, encontrar patrones y obtener respuestas rápidas a preguntas complejas.
-
-El modelo dimensional, propuesto por Ralph Kimball, es la base de diseño de estos sistemas. Organiza los datos en **tablas de hechos** — que contienen las métricas cuantitativas — y **tablas de dimensiones** — que proveen el contexto de análisis respondiendo las preguntas *¿quién?, ¿qué?, ¿cuándo?, ¿dónde?, ¿cómo?* La estructura recomendada es el **modelo en estrella**, donde la tabla de hechos se ubica al centro conectada a sus dimensiones, priorizando simplicidad y velocidad de consulta.
+El modelo dimensional, propuesto por Ralph Kimball, organiza los datos en **tablas de hechos** — métricas cuantitativas — y **tablas de dimensiones** — contexto de análisis. La estructura recomendada es el **modelo en estrella**, donde la tabla de hechos se ubica al centro conectada a sus dimensiones (Kimball & Ross, 2013).
 
 ### 1.3 ETL y SQL
+El proceso **ETL** (Extract, Transform, Load) extrae datos de las fuentes originales, los transforma según el modelo dimensional y los carga en las tablas finales (Vassiliadis, 2009). En nuestro proyecto está implementado en `extract.py`, `transform.py` y `load.py`, ejecutándose de forma automatizada mediante un pipeline con CI/CD.
 
-El proceso **ETL** (Extract, Transform, Load) permite construir el datamart extrayendo datos de las fuentes originales, transformándolos y limpiándolos según el modelo dimensional, y cargándolos en las tablas finales para su consulta. En nuestro proyecto, este proceso está implementado en los módulos `extract.py`, `transform.py` y `load.py`, ejecutándose de forma automatizada mediante un pipeline con CI/CD.
-
-**SQL** (Structured Query Language) es el lenguaje utilizado para consultar el datamart, permitiendo calcular indicadores como tasas de valorización por departamento, evolución anual de generación de residuos o rankings de municipalidades por desempeño ambiental.
+**SQL** (Structured Query Language) es el lenguaje estándar para consultar bases de datos relacionales (ISO/IEC 9075, 2016), utilizado para calcular indicadores como tasas de valorización, evolución de generación de residuos y rankings de municipalidades.
 
 ---
 
@@ -49,6 +54,8 @@ Frente a esta problemática, proponemos un **datamart analítico** construido so
 ## 3. Modelamiento de Data Dimensional
 
 ### 3.1 Enfoque metodológico
+
+El presente proyecto implementa un **datamart** analítico — un repositorio dimensional enfocado en un dominio específico — a diferencia de un Data Warehouse, que integraría múltiples fuentes a nivel organizacional (Kimball & Ross, 2013). Esta decisión responde al alcance del análisis: una única fuente de datos (SIGERSOL) y un proceso de negocio acotado (valorización y generación de residuos sólidos).
 
 El modelo dimensional fue construido siguiendo la metodología de Kimball, adoptando un esquema de **constelación de hechos** (*fact constellation* o *galaxy schema*), en el que dos tablas de hechos independientes comparten dimensiones comunes. Este enfoque es apropiado cuando se modelan múltiples procesos de negocio relacionados — en nuestro caso, la **valorización** y la **generación** de residuos sólidos — permitiendo analizarlos de forma independiente o cruzada.
 
@@ -291,7 +298,16 @@ import pandas as pd
 df = pd.read_parquet("data/marts/fact_valorizacion.parquet")
 ```
 
-## Fuente de datos
+## Fuentes de Datos
 
-- MINAM — Sistema de Información para la Gestión de Residuos Sólidos (SIGERSOL)
-- Datos abiertos: [datosabiertos.gob.pe](https://www.datosabiertos.gob.pe)
+Codd, E. F., Codd, S. B., & Salley, C. T. (1993). *Providing OLAP to user-analysts: An IT mandate*. Codd & Date.
+
+International Organization for Standardization. (2016). *ISO/IEC 9075: Information technology — Database languages — SQL*. ISO.
+
+Kimball, R., & Ross, M. (2013). *The data warehouse toolkit: The definitive guide to dimensional modeling* (3rd ed.). Wiley.
+
+Ministerio del Ambiente. (2024). *Sistema de Información para la Gestión de Residuos Sólidos (SIGERSOL)*. Gobierno del Perú. https://www.datosabiertos.gob.pe
+
+Negash, S. (2004). Business Intelligence. *Communications of the Association for Information Systems*, *13*, 177–195. https://doi.org/10.17705/1CAIS.01315
+
+Vassiliadis, P. (2009). A survey of Extract-Transform-Load technology. *International Journal of Data Warehousing and Mining*, *5*(3), 1–27. https://doi.org/10.4018/jdwm.2009070101
