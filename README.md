@@ -29,23 +29,30 @@ El proceso **ETL** (Extract, Transform, Load) extrae datos de las fuentes origin
 
 ---
 
-## 2. Descripción de la empresa
+## 2. Descripción del área y actores
 
-El **Ministerio del Ambiente (MINAM)** es el organismo rector de la política ambiental en el Perú, responsable de diseñar, establecer y supervisar la gestión sostenible de los recursos naturales a nivel nacional. En materia de residuos sólidos, el MINAM articula esfuerzos con gobiernos locales y regionales, y administra el **Sistema de Información para la Gestión de Residuos Sólidos (SIGERSOL)**, plataforma que centraliza el reporte anual de generación, valorización y disposición final de residuos a nivel distrital en todo el país.
+El área de análisis del presente trabajo es la **gestión de residuos sólidos municipales en el Perú**, regulada por el Decreto Legislativo N° 1278 y supervisada por el Ministerio del Ambiente (MINAM) a través del Sistema de Información para la Gestión de Residuos Sólidos (SIGERSOL), plataforma que centraliza el reporte anual de generación, valorización y disposición final de residuos a nivel distrital.
 
-En la actualidad, el MINAM ejecuta el programa **"Desarrollo de Sistemas de Gestión de Residuos Sólidos en Zonas Priorizadas"**, cofinanciado por el BID, cuyo objetivo es multiplicar el número de municipios ecoeficientes y garantizar el cumplimiento de las metas del Plan Nacional de Acción Ambiental. Si bien este programa alcanzó el 100% de sus metas comprometidas en su componente BID — recuperando 264 hectáreas degradadas y beneficiando a más de un millón de peruanos — la escala de intervención aún es insuficiente frente a la magnitud del problema ambiental nacional.
+### 2.1 Actores involucrados
 
-### 2.1 Problemática
+**Municipalidades distritales y provinciales** son los actores beneficiados directos del presente trabajo. Según el DL 1278, las municipalidades distritales son responsables de asegurar la recolección, transporte y disposición final de residuos en su jurisdicción, mientras que las provinciales fiscalizan y coordinan planes provinciales de manejo de residuos. Son ellas quienes toman decisiones operativas diarias sobre la gestión de residuos y quienes más necesitan información consolidada y comparable para mejorar su desempeño.
 
-Uno de los principales obstáculos que enfrenta el MINAM no es únicamente operativo, sino **de información y visibilidad**. Si bien SIGERSOL centraliza anualmente miles de registros distritales, esta información no se encuentra estructurada para el análisis, lo que genera una brecha entre los datos disponibles y la capacidad real de toma de decisiones, manifestada en:
+El **MINAM** actúa como ente rector: establece las metas nacionales, administra SIGERSOL y ejecuta programas de intervención como el "Desarrollo de Sistemas de Gestión de Residuos Sólidos en Zonas Priorizadas", cofinanciado por el BID, que alcanzó el 100% de sus metas comprometidas recuperando 264 hectáreas degradadas y beneficiando a más de un millón de peruanos.
 
-- **Falta de visibilidad territorial:** No existe una vista consolidada que permita comparar el desempeño de distritos y regiones a lo largo del tiempo.
-- **Dificultad para identificar brechas:** Sin un modelo analítico, es complejo detectar qué municipios tienen menor valorización, cuáles no reportan datos o dónde se concentran los mayores volúmenes de residuos sin tratamiento.
-- **Decisiones poco basadas en evidencia:** La ausencia de indicadores consolidados limita la capacidad del MINAM para priorizar intervenciones y evaluar el impacto de sus programas a nivel nacional.
+### 2.2 Problemática
 
-### 2.2 Nuestra propuesta
+A pesar del marco normativo existente, las municipalidades peruanas enfrentan serias dificultades en la gestión de residuos sólidos (CESO CI International, 2025):
 
-Frente a esta problemática, proponemos un **datamart analítico** construido sobre los datos de SIGERSOL (2019–2024), que estructure la información disponible en un modelo dimensional consultable, permitiendo al MINAM:
+- **Baja valorización:** Solo el 2.72% de los 8.7 millones de toneladas anuales generadas es valorizado, pese a que el 77.6% tiene potencial de aprovechamiento (MEF, 2024).
+- **Disposición inadecuada:** El 39% de los residuos termina en botaderos informales, con más de 3,300 zonas degradadas identificadas por el OEFA.
+- **Capacidad limitada:** Solo el 34% de municipalidades (641 de un total de 1,883) realiza actividades de valorización, y apenas 215 cuentan con disposición final adecuada (MEF, 2024).
+- **Infraestructura insuficiente:** El país cuenta con solo 103 rellenos sanitarios operativos cuando se requieren al menos 375.
+
+Sin embargo, uno de los problemas más críticos es la **brecha de información**: el MEF califica a SIGERSOL como no confiable por manejar información limitada, incompleta e inoportuna. Una auditoría de la Contraloría (2019) reveló que el 84% de las municipalidades supervisadas no cumplió con su obligación legal de reportar, y en 2022 solo el 44% de municipalidades actualizó su información en el sistema (826 de 1,874). Esta situación impide que las propias municipalidades conozcan su situación relativa y dificulta la toma de decisiones basada en evidencia (MINAM, 2025; Rojas, 2022).
+
+### 2.3 Nuestra propuesta
+
+Frente a esta problemática, proponemos un **datamart analítico** construido sobre los datos de SIGERSOL (2019–2024), que estructure la información disponible en un modelo dimensional consultable, permitiendo a las municipalidades y al MINAM:
 
 - Monitorear la evolución de la valorización y generación de residuos **a nivel distrital y regional**.
 - Identificar **municipios críticos** con baja valorización o sin reporte de datos.
@@ -304,6 +311,8 @@ df = pd.read_parquet("data/marts/fact_valorizacion.parquet")
 
 Codd, E. F., Codd, S. B., & Salley, C. T. (1993). *Providing OLAP to user-analysts: An IT mandate*. Codd & Date.
 
+CESO CI International. (2025). *Estudio sobre la gestión de residuos sólidos en Perú: Estado actual y perspectivas de inversión europea sostenible*. Delegación de la Unión Europea en el Perú. https://aws-a.medias-ccifi.org/fileadmin/cru-1774349813/perou/user_upload/Estudio_UE_Gestio__n_de_Residuos_So__lidos_en_el_Peru.pdf
+
 DuckDB Labs. (2019). *DuckDB: An embeddable analytical database*. https://duckdb.org
 
 International Organization for Standardization. (2016). *ISO/IEC 9075: Information technology — Database languages — SQL*. ISO.
@@ -312,6 +321,10 @@ Kimball, R., & Ross, M. (2013). *The data warehouse toolkit: The definitive guid
 
 Ministerio del Ambiente. (2024). *Sistema de Información para la Gestión de Residuos Sólidos (SIGERSOL)*. Gobierno del Perú. https://www.datosabiertos.gob.pe
 
+MINAM. (2025, agosto 10). *Recomendaciones para mejorar la gestión de los residuos sólidos*. SINIA. https://sinia.minam.gob.pe/normas/donde-va-nuestra-basura-recomendaciones-mejorar-gestion-residuos-solidos
+
 Negash, S. (2004). Business Intelligence. *Communications of the Association for Information Systems*, *13*, 177–195. https://doi.org/10.17705/1CAIS.01315
+
+Rojas, M. (2022). *Implementación del marco regulatorio sobre el manejo de residuos sólidos en seis municipalidades provinciales del Perú*. Universidad del Pacífico. https://alicia.concytec.gob.pe/vufind/Record/UUPP_bb980f41bc015ec7ab1816292e8d0c3d
 
 Vassiliadis, P. (2009). A survey of Extract-Transform-Load technology. *International Journal of Data Warehousing and Mining*, *5*(3), 1–27. https://doi.org/10.4018/jdwm.2009070101
