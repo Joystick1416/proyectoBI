@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&family=Caveat:wght@400;600&family=Quicksand:wght@300;400;500;600&display=swap');
+
+/* ── Variables de color ─────────────────────────────────────── */
+:root {
+  --verde-bambu:     #5C8A66;
+  --verde-hoja:      #7EA479;
+  --marron-madera:   #665044;
+  --musgo-suave:     #8C9980;
+  --rojo-arce:       #A62B2B;
+  --naranja-oxido:   #D36E36;
+  --amarillo-mostaza:#DCA134;
+  --purpura:         #522D5B;
+  --fondo:           #F5F2EE;
+  --fondo-card:      #FFFFFF;
+  --texto-principal: #2D2D2D;
+  --texto-suave:     #6B6B6B;
+}
+
+/* ── Reset y base ───────────────────────────────────────────── */
+body {
+  background-color: var(--fondo);
+  font-family: 'Quicksand', sans-serif;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────── */
+.navbar-custom {
+  background: linear-gradient(135deg, var(--verde-bambu), var(--marron-madera));
+  padding: 12px 24px;
+  border-bottom: 3px solid var(--naranja-oxido);
+}
+
+.navbar-brand-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #FFFFFF !important;
+  letter-spacing: 0.5px;
+}
+
+.navbar-subtitle {
+  font-family: 'Quicksand', cursive;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.80);
+  margin-left: 20px;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+.nav-tabs {
+  border-bottom: 2px solid var(--musgo-suave) !important;
+  background-color: var(--fondo);
+  padding: 0 24px;
+}
+
+.nav-tabs .nav-link {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--texto-suave) !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  padding: 12px 20px;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--verde-bambu) !important;
+  border-bottom-color: var(--verde-hoja) !important;
+  background: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--verde-bambu) !important;
+  border-bottom: 3px solid var(--verde-bambu) !important;
+  background: transparent;
+  font-weight: 700;
+}
+
+/* ── Filtros ────────────────────────────────────────────────── */
+.filtros-bar {
+  background: #FFFFFF;
+  border-radius: 10px;
+  padding: 16px 24px;
+  margin: 20px 24px 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.filtro-label {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+/* ── KPI Cards ──────────────────────────────────────────────── */
+.kpi-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 24px;
+}
+
+.kpi-card {
+  flex: 1;
+  min-width: 180px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  border-left: 4px solid var(--verde-bambu);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.11);
+}
+
+.kpi-card.acento-naranja { border-left-color: var(--naranja-oxido); }
+.kpi-card.acento-marron  { border-left-color: var(--marron-madera); }
+.kpi-card.acento-purpura { border-left-color: var(--purpura); }
+.kpi-card.acento-rojo    { border-left-color: var(--rojo-arce); }
+
+.kpi-valor {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  line-height: 1;
+}
+
+.kpi-etiqueta {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 6px;
+}
+
+.kpi-delta {
+  font-family: 'Caveat', cursive;
+  font-size: 0.95rem;
+  color: var(--verde-bambu);
+  margin-top: 4px;
+}
+
+/* ── Sección de gráficos ────────────────────────────────────── */
+.charts-section {
+  padding: 0 24px 40px;
+}
+
+.chart-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+}
+
+.chart-titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+  margin-bottom: 4px;
+}
+
+.chart-subtitulo {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--texto-suave);
+  margin-bottom: 10px;
+}
+
+/* ── Placeholder gasto ──────────────────────────────────────── */
+.placeholder-gasto {
+  text-align: center;
+  padding: 80px 40px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  margin: 24px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+
+.placeholder-gasto h3 {
+  font-family: 'Fraunces', serif;
+  color: var(--marron-madera);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.placeholder-gasto p {
+  font-family: 'Caveat', cursive;
+  color: var(--texto-suave);
+  font-size: 1.1rem;
+}
+
+/* ── Dropdown Dash override ─────────────────────────────────── */
+.Select-control {
+  border-radius: 8px !important;
+  border-color: #DDD !important;
+  font-family: 'Quicksand', sans-serif !important;
+  font-size: 0.88rem !important;
+}
+
+.Select-menu-outer {
+  font-family: 'Quicksand', sans-serif !important;
+  font-size: 0.88rem !important;
+}
+
+/* ── Tab content ────────────────────────────────────────────── */
+.tab-content {
+  background: var(--fondo);
+  min-height: calc(100vh - 80px);
+}
+
+/* Sin padding en el tab-pane — el contenido ya tiene su propio espaciado */
+.tab-pane {
+  padding: 0 !important;
+}
+
+/* Ajuste de márgenes de filas Bootstrap dentro de gráficos */
+.charts-section .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.charts-section .row > [class*="col"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
