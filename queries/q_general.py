@@ -33,19 +33,24 @@ def kpi_general(anios=None, regiones=None, departamentos=None):
     """).fetchone()
     r_val = con.execute(f"""
         WITH {GEO_CTE}
-        SELECT ROUND(
-            SUM(fv.qresiduos_valorizado) /
-            NULLIF(SUM(CASE WHEN fv.tipo_residuo='ORGANICO'
-                           THEN fv.qresiduos_mun END), 0) * 100
-        , 2) AS tasa_valorizacion_pct
+        SELECT
+            ROUND(
+                SUM(fv.qresiduos_valorizado) /
+                NULLIF(SUM(CASE WHEN fv.tipo_residuo='ORGANICO'
+                               THEN fv.qresiduos_mun END), 0) * 100
+            , 2) AS tasa_valorizacion_pct,
+            ROUND(SUM(fv.qresiduos_valorizado) / 1e3, 1) AS valorizado_miles_t,
+            COUNT(DISTINCT fv.ubigeo)                     AS municipios_con_reporte
         FROM fact_valorizacion fv
         JOIN geo g USING (ubigeo)
         {where_val}
     """).fetchone()
     con.close()
     return {
-        "total_generado_mt":     r_gen[0] or 0,
-        "tasa_valorizacion_pct": r_val[0] or 0,
+        "total_generado_mt":      r_gen[0] or 0,
+        "tasa_valorizacion_pct":  r_val[0] or 0,
+        "valorizado_miles_t":     r_val[1] or 0,
+        "municipios_con_reporte": r_val[2] or 0,
     }
 
 

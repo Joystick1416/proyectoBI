@@ -124,12 +124,12 @@ def update_kpis(anios, regiones, deptos):
             html.Div("Tasa de valorización", className="kpi-etiqueta"),
         ]),
         html.Div(className="kpi-card acento-marron", children=[
-            html.Div("—", className="kpi-valor"),
-            html.Div("Devengado MEF (sin datos)", className="kpi-etiqueta"),
+            html.Div(f"{d['valorizado_miles_t']:,.1f} K t", className="kpi-valor"),
+            html.Div("Residuos valorizados", className="kpi-etiqueta"),
         ]),
         html.Div(className="kpi-card acento-purpura", children=[
-            html.Div("—", className="kpi-valor"),
-            html.Div("% Ejecución presupuestal (sin datos)", className="kpi-etiqueta"),
+            html.Div(str(d['municipios_con_reporte']), className="kpi-valor"),
+            html.Div("Municipios con reporte", className="kpi-etiqueta"),
         ]),
     ]
 
