@@ -140,12 +140,12 @@ def update_kpis(anios, niveles, deptos, funciones, programas):
             html.Div("Presupuesto modificado (PIM)", className="kpi-etiqueta"),
         ]),
         html.Div(className="kpi-card acento-naranja", children=[
-            html.Div(f"S/ {d['devengado']:,.2f} MM", className="kpi-valor"),
-            html.Div("Total devengado MEF", className="kpi-etiqueta"),
+            html.Div(f"S/ {d['girado']:,.2f} MM", className="kpi-valor"),
+            html.Div("Monto girado (pagado)", className="kpi-etiqueta"),
         ]),
         html.Div(className="kpi-card acento-marron", children=[
-            html.Div(f"{d['tasa']:.1f}%", className="kpi-valor"),
-            html.Div("Tasa de ejecución presupuestal", className="kpi-etiqueta"),
+            html.Div(str(d['deptos']), className="kpi-valor"),
+            html.Div("Departamentos con registro", className="kpi-etiqueta"),
         ]),
     ]
 

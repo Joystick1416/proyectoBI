@@ -47,13 +47,13 @@ def kpi_gasto(anios=None, niveles=None, deptos=None, funciones=None, programas=N
     con = get_con()
     row = con.execute(f"""
         SELECT
-            ROUND(SUM(monto_pim)       / 1e9, 2),
-            ROUND(SUM(monto_devengado) / 1e9, 2),
-            ROUND(SUM(monto_devengado) / NULLIF(SUM(monto_pim), 0) * 100, 1)
+            ROUND(SUM(monto_pim)    / 1e9, 2),
+            ROUND(SUM(monto_girado) / 1e9, 2),
+            COUNT(DISTINCT departamento)
         FROM fact_gasto {where}
     """).fetchone()
     con.close()
-    return {"pim": row[0] or 0, "devengado": row[1] or 0, "tasa": row[2] or 0}
+    return {"pim": row[0] or 0, "girado": row[1] or 0, "deptos": row[2] or 0}
 
 
 def evolucion_anual(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
