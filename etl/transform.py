@@ -149,7 +149,24 @@ def build_fact_generacion(df_gen: pd.DataFrame) -> pd.DataFrame:
     return fact
 
 
-# ── Nuevas dimensiones (MEF/SIAF) ─────────────────────────────────────────────
+# ── Dimensiones MEF/SIAF ─────────────────────────────────────────────────────
+
+def build_dim_tiempo_presupuestal() -> pd.DataFrame:
+    meses_es = {
+        1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril",
+        5: "Mayo", 6: "Junio", 7: "Julio", 8: "Agosto",
+        9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"
+    }
+    rows = [
+        {"anio": anio, "mes": mes, "nombre_mes": meses_es[mes]}
+        for anio in range(2019, 2025)
+        for mes in range(1, 13)
+    ]
+    dim = pd.DataFrame(rows)
+    dim.insert(0, "tiempo_id", range(1, len(dim) + 1))
+    print(f"  dim_tiempo_presupuestal: {len(dim)} filas")
+    return dim
+
 
 def build_dim_entidad(df_gasto: pd.DataFrame) -> pd.DataFrame:
     cols = ["NIVEL_GOBIERNO_NOMBRE", "SECTOR_NOMBRE", "PLIEGO_NOMBRE", "EJECUTORA_NOMBRE"]
@@ -200,6 +217,7 @@ def build_fact_gasto(
     df_mant: pd.DataFrame | None,
     df_cc_raw: pd.DataFrame | None,
     dim_geo: pd.DataFrame,
+    dim_tiempo_ppto: pd.DataFrame,
     dim_entidad: pd.DataFrame,
     dim_presupuesto: pd.DataFrame,
     dim_programa: pd.DataFrame,
@@ -266,8 +284,16 @@ def build_fact_gasto(
     else:
         df["cc_id"] = pd.NA
 
-    # Agregar a nivel anual
-    group_cols = ["ubigeo", "ANO_EJE", "entidad_id", "presupuesto_id", "programa_id", "cc_id"]
+    # Join con dim_tiempo_presupuestal para obtener tiempo_id (granularidad mensual)
+    df = df.merge(
+        dim_tiempo_ppto[["tiempo_id", "anio", "mes"]],
+        how="left",
+        left_on=["ANO_EJE", "MES_EJE"],
+        right_on=["anio", "mes"],
+    ).drop(columns=["anio", "mes"])
+
+    # Agregar a nivel mensual
+    group_cols = ["ubigeo", "tiempo_id", "entidad_id", "presupuesto_id", "programa_id", "cc_id"]
     fact = df.groupby(group_cols, dropna=False).agg(
         monto_pia=("MONTO_PIA", "sum"),
         monto_pim=("MONTO_PIM", "sum"),
@@ -275,8 +301,7 @@ def build_fact_gasto(
         monto_girado=("MONTO_GIRADO", "sum"),
     ).reset_index()
 
-    fact = fact.rename(columns={"ANO_EJE": "anio_id"})
-    fact = fact.sort_values(["ubigeo", "anio_id"]).reset_index(drop=True)
+    fact = fact.sort_values(["ubigeo", "tiempo_id"]).reset_index(drop=True)
     fact.insert(0, "id", range(1, len(fact) + 1))
     print(f"  fact_gasto: {len(fact)} filas")
     return fact
@@ -325,17 +350,20 @@ def run():
             [f for f in [df_mant, df_cc_raw] if f is not None], ignore_index=True
         )
 
+        dim_tiempo_ppto = build_dim_tiempo_presupuestal()
         dim_entidad = build_dim_entidad(df_gasto_all)
         dim_presupuesto = build_dim_presupuesto(df_gasto_all)
         dim_programa = build_dim_programa_funcional(df_gasto_all)
         dim_cc_dim = build_dim_cambio_climatico(df_cc_raw) if df_cc_raw is not None else None
-        fact_gasto = build_fact_gasto(df_mant, df_cc_raw, dim_geo, dim_entidad, dim_presupuesto, dim_programa, dim_cc_dim)
+        fact_gasto = build_fact_gasto(df_mant, df_cc_raw, dim_geo, dim_tiempo_ppto, dim_entidad, dim_presupuesto, dim_programa, dim_cc_dim)
 
+        dim_tiempo_ppto.to_parquet(MARTS_DIR / "dim_tiempo_presupuestal.parquet", index=False)
         dim_entidad.to_parquet(MARTS_DIR / "dim_entidad.parquet", index=False)
         dim_presupuesto.to_parquet(MARTS_DIR / "dim_presupuesto.parquet", index=False)
         dim_programa.to_parquet(MARTS_DIR / "dim_programa_funcional.parquet", index=False)
         fact_gasto.to_parquet(MARTS_DIR / "fact_gasto.parquet", index=False)
 
+        dim_tiempo_ppto.to_csv(MARTS_DIR / "dim_tiempo_presupuestal.csv", index=False)
         dim_entidad.to_csv(MARTS_DIR / "dim_entidad.csv", index=False)
         dim_presupuesto.to_csv(MARTS_DIR / "dim_presupuesto.csv", index=False)
         dim_programa.to_csv(MARTS_DIR / "dim_programa_funcional.csv", index=False)

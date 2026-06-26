@@ -157,6 +157,13 @@ erDiagram
         str actividad_nombre
     }
 
+    dim_tiempo_presupuestal {
+        int tiempo_id PK
+        int anio
+        int mes
+        str nombre_mes
+    }
+
     dim_cambio_climatico {
         int cc_id PK
         str medida
@@ -166,7 +173,7 @@ erDiagram
     fact_gasto {
         int id PK
         int ubigeo FK
-        int anio_id FK
+        int tiempo_id FK
         int entidad_id FK
         int presupuesto_id FK
         int programa_id FK
@@ -182,16 +189,16 @@ erDiagram
     dim_geografica       ||--o{ fact_valorizacion : "ubigeo"
     dim_residuo          ||--o{ fact_valorizacion : "residuo_id"
 
-    dim_tiempo           ||--o{ fact_generacion : "anio_id"
-    dim_geografica       ||--o{ fact_generacion : "ubigeo"
-    dim_municipio        ||--o{ fact_generacion : "ubigeo"
+    dim_tiempo               ||--o{ fact_generacion : "anio_id"
+    dim_geografica           ||--o{ fact_generacion : "ubigeo"
+    dim_municipio            ||--o{ fact_generacion : "ubigeo"
 
-    dim_tiempo           ||--o{ fact_gasto : "anio_id"
-    dim_geografica       ||--o{ fact_gasto : "ubigeo"
-    dim_entidad          ||--o{ fact_gasto : "entidad_id"
-    dim_presupuesto      ||--o{ fact_gasto : "presupuesto_id"
-    dim_programa_funcional ||--o{ fact_gasto : "programa_id"
-    dim_cambio_climatico ||--o{ fact_gasto : "cc_id"
+    dim_tiempo_presupuestal  ||--o{ fact_gasto : "tiempo_id"
+    dim_geografica           ||--o{ fact_gasto : "ubigeo"
+    dim_entidad              ||--o{ fact_gasto : "entidad_id"
+    dim_presupuesto          ||--o{ fact_gasto : "presupuesto_id"
+    dim_programa_funcional   ||--o{ fact_gasto : "programa_id"
+    dim_cambio_climatico     ||--o{ fact_gasto : "cc_id"
 ```
 ### 3.3 Granularidad
 
@@ -199,7 +206,7 @@ erDiagram
 |---|---|
 | `fact_valorizacion` | Un registro por distrito × año × tipo de residuo (orgánico / inorgánico) |
 | `fact_generacion` | Un registro por distrito × año |
-| `fact_gasto` | Un registro por distrito × año × entidad × clasificador presupuestal × programa funcional |
+| `fact_gasto` | Un registro por distrito × mes × entidad × clasificador presupuestal × programa funcional |
 
 ### 3.4 Dimensiones
 
@@ -245,6 +252,16 @@ Distingue el tipo de residuo analizado, permitiendo comparar la valorización or
 | `residuo_id` | int | PK (1 = Orgánico, 2 = Inorgánico) |
 | `tipo_residuo` | str | ORGANICO / INORGANICO |
 | `descripcion` | str | Descripción del proceso de valorización asociado |
+
+#### `dim_tiempo_presupuestal`
+Cubre el período 2019–2024 con granularidad mensual (72 registros). Es independiente de `dim_tiempo` porque el ciclo presupuestal del MEF opera en meses, mientras que SIGERSOL reporta anualmente.
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `tiempo_id` | int | PK surrogate |
+| `anio` | int | Año de ejecución (2019–2024) |
+| `mes` | int | Mes de ejecución (1–12) |
+| `nombre_mes` | str | Nombre del mes en español |
 
 #### `dim_entidad`
 Describe la entidad ejecutora del gasto público, permitiendo comparar el desempeño presupuestal entre tipos de gobierno y sectores.
@@ -336,7 +353,7 @@ Registra la ejecución presupuestal anual a nivel distrital. Los montos mensuale
 |---|---|---|
 | `id` | int | PK surrogate |
 | `ubigeo` | int | FK → dim_geografica |
-| `anio_id` | int | FK → dim_tiempo |
+| `tiempo_id` | int | FK → dim_tiempo_presupuestal |
 | `entidad_id` | int | FK → dim_entidad |
 | `presupuesto_id` | int | FK → dim_presupuesto |
 | `programa_id` | int | FK → dim_programa_funcional |
@@ -367,7 +384,7 @@ Ambos datasets del SIAF comparten la misma estructura base. El de cambio climát
 | Limitación | Descripción |
 |---|---|
 | **Granularidad anual (SIGERSOL)** | SIGERSOL recopila reportes una vez al año por obligación legal (DL 1278). No existe información mensual disponible públicamente. |
-| **Agregación anual del gasto** | Los datos del MEF/SIAF tienen granularidad mensual (`MES_EJE`), pero se agregan a nivel anual en el ETL para mantener consistencia con SIGERSOL. Se pierde la capacidad de análisis intra-anual del gasto. |
+| **Cruce temporal con SIGERSOL** | `fact_gasto` tiene granularidad mensual (`dim_tiempo_presupuestal`) mientras que `fact_valorizacion` y `fact_generacion` son anuales (`dim_tiempo`). Para cruzarlas en una consulta se debe agregar el gasto por año via `GROUP BY dim_tiempo_presupuestal.anio`. |
 | **Cobertura temporal del gasto** | `fact_gasto` se filtra al período 2019–2024 para alinearse con SIGERSOL, aunque el SIAF dispone de datos desde 2014. |
 | **Cobertura de municipalidades** | Solo el 44% de las municipalidades actualizó SIGERSOL en 2022 (826 de 1,874), lo que limita la representatividad del análisis a nivel distrital. |
 | **Join geográfico del gasto** | La vinculación de `fact_gasto` con `dim_geografica` se realiza por normalización de nombres (departamento/provincia/distrito), no por código directo. Discrepancias en grafías entre MEF y SIGERSOL pueden generar registros sin ubigeo asignado, cuantificados en el reporte de calidad. |
@@ -393,6 +410,7 @@ datamart-residuos/
 │       ├── dim_residuo.parquet
 │       ├── fact_valorizacion.parquet
 │       ├── fact_generacion.parquet
+│       ├── dim_tiempo_presupuestal.parquet
 │       ├── dim_entidad.parquet
 │       ├── dim_presupuesto.parquet
 │       ├── dim_programa_funcional.parquet

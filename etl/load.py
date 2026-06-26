@@ -22,6 +22,7 @@ TABLAS_BASE = [
 ]
 
 TABLAS_GASTO = [
+    "dim_tiempo_presupuestal",
     "dim_entidad",
     "dim_presupuesto",
     "dim_programa_funcional",
