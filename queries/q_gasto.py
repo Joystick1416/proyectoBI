@@ -13,10 +13,12 @@ def _norm_depto(d):
     return 'CALLAO' if d == _CALLAO_RAW else d
 
 
-def _where(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
+def _where(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
     clauses = ["departamento != ' '"]
     if anios:
         clauses.append(f"anio IN ({', '.join(str(a) for a in anios)})")
+    if meses:
+        clauses.append(f"mes IN ({', '.join(str(m) for m in meses)})")
     if niveles:
         clauses.append(f"nivel_gobierno IN ({_q(niveles)})")
     if deptos:
@@ -53,12 +55,15 @@ def opciones_gasto():
     progs = [r[0] for r in con.execute(
         "SELECT DISTINCT programa FROM fact_gasto WHERE programa IS NOT NULL ORDER BY 1"
     ).fetchall()]
+    meses = [r[0] for r in con.execute(
+        "SELECT DISTINCT mes FROM fact_gasto WHERE mes IS NOT NULL ORDER BY 1"
+    ).fetchall()]
     con.close()
-    return anios, niveles, deptos, funcs, progs
+    return anios, niveles, deptos, funcs, progs, meses
 
 
-def kpi_gasto(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def kpi_gasto(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     row = con.execute(f"""
         SELECT
@@ -71,8 +76,8 @@ def kpi_gasto(anios=None, niveles=None, deptos=None, funciones=None, programas=N
     return {"pim": row[0] or 0, "girado": row[1] or 0, "deptos": row[2] or 0}
 
 
-def evolucion_anual(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def evolucion_anual(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT anio,
@@ -85,8 +90,8 @@ def evolucion_anual(anios=None, niveles=None, deptos=None, funciones=None, progr
     return df
 
 
-def top_deptos(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def top_deptos(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT CASE WHEN departamento = '{_CALLAO_RAW}' THEN 'CALLAO' ELSE departamento END AS departamento,
@@ -102,8 +107,8 @@ def top_deptos(anios=None, niveles=None, deptos=None, funciones=None, programas=
     return df
 
 
-def gasto_por_funcion(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def gasto_por_funcion(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT funcion,
@@ -117,8 +122,8 @@ def gasto_por_funcion(anios=None, niveles=None, deptos=None, funciones=None, pro
     return df
 
 
-def gasto_por_fuente(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def gasto_por_fuente(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT fuente_financiamiento,
@@ -131,8 +136,8 @@ def gasto_por_fuente(anios=None, niveles=None, deptos=None, funciones=None, prog
     return df
 
 
-def gasto_por_nivel(anios=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, None, deptos, funciones, programas)
+def gasto_por_nivel(anios=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, None, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT nivel_gobierno,
@@ -146,8 +151,8 @@ def gasto_por_nivel(anios=None, deptos=None, funciones=None, programas=None):
     return df
 
 
-def heatmap_mensual(anios=None, niveles=None, deptos=None, funciones=None, programas=None):
-    where = _where(anios, niveles, deptos, funciones, programas)
+def heatmap_mensual(anios=None, niveles=None, deptos=None, funciones=None, programas=None, meses=None):
+    where = _where(anios, niveles, deptos, funciones, programas, meses)
     con = get_con()
     df = con.execute(f"""
         SELECT anio, mes,
