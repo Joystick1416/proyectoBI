@@ -25,7 +25,7 @@ C = {
 }
 
 PLOTLY_LAYOUT = dict(
-    font_family="Quicksand, sans-serif",
+    font_family="Lato, sans-serif",
     paper_bgcolor="white",
     plot_bgcolor="white",
     margin=dict(t=30, b=30, l=20, r=20),
