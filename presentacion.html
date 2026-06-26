@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Residuos Sólidos Perú</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #665044; /* Marrón Madera */
+            margin: 0; padding: 0;
+            font-family: 'Lato', sans-serif;
+            color: #665044;
+            overflow: hidden;
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw; height: 100vh;
+            max-width: 1280px; max-height: 720px;
+            aspect-ratio: 16 / 9;
+            background-color: #FDFCF0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px 60px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            z-index: 1;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; z-index: 10; }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 10px;
+            background: linear-gradient(90deg, #5C8A66 0%, #7EA479 25%, #DCA134 50%, #D36E36 75%, #A62B2B 100%);
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; margin: 0; }
+        h1 { color: #5C8A66; font-size: 52px; line-height: 1.1; margin-bottom: 20px; text-align: center; }
+        .slide-title { font-size: 34px; color: #5C8A66; margin-bottom: 20px; border-left: 6px solid #665044; padding-left: 20px; width: 100%; text-align: left; }
+        h3 { font-size: 22px; color: #5C8A66; margin-bottom: 10px; }
+        p, li { font-size: 16px; color: #665044; line-height: 1.5; }
+
+        .subtitle { font-size: 22px; color: #8C9980; text-align: center; max-width: 900px; margin-bottom: 0; font-weight: 600; }
+        .content-area { display: flex; flex-direction: column; flex-grow: 1; width: 100%; justify-content: center; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: center; }
+
+        .tile {
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #8C9980;
+            padding: 22px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .tile .icon { font-size: 32px; color: #7EA479; margin-bottom: 12px; }
+
+        .bullet-list { list-style: none; padding: 0; margin: 0; }
+        .bullet-list li { position: relative; padding-left: 35px; margin-bottom: 12px; text-align: left; }
+        .bullet-list li i { position: absolute; left: 0; top: 4px; color: #7EA479; font-size: 16px; }
+
+        .number-box { text-align: center; background: #A62B2B; color: #FDFCF0; padding: 35px; border-radius: 8px; width: 100%; }
+        .number { font-size: 80px; font-weight: 700; line-height: 1; font-family: 'Poppins'; }
+        .number-label { font-size: 15px; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; font-weight: 600; }
+        .alert-text { color: #D36E36; font-weight: 700; }
+
+        /* Grillas de Arquitectura */
+        .fact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+        .conformadas-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; width: 100%; }
+        .especificas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+
+        .mini-card {
+            background: #ffffff;
+            border: 1px solid #8C9980;
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            text-align: left;
+        }
+        .mini-card.fact-card { border-top: 6px solid #A62B2B; }
+        .mini-card.dim-conformada { border-top: 6px solid #DCA134; background: #FFFDF5; }
+        .mini-card.dim-especifica { border-top: 6px solid #5C8A66; background: #F9FAF7; }
+        .mini-card.dim-gasto { border-top: 6px solid #522D5B; background: #F6F2F7; }
+
+        .mini-card h4 {
+            font-size: 16px; color: #665044; margin: 0 0 8px 0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .mini-card ul { margin: 0; padding-left: 18px; color: #665044; }
+        .mini-card li { font-size: 13px; margin-bottom: 4px; line-height: 1.3; list-style-type: square; }
+
+        .grain-badge {
+            display: inline-block; background: #665044; color: #FDFCF0;
+            font-size: 11px; padding: 2px 8px; border-radius: 12px;
+            margin-top: 10px; font-weight: bold;
+        }
+
+        /* Controles de Navegación */
+        .controls { position: absolute; bottom: 30px; left: 60px; display: flex; gap: 15px; z-index: 100; }
+        .nav-btn {
+            background-color: #5C8A66; color: #FDFCF0; border: none;
+            width: 45px; height: 45px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover { background-color: #D36E36; transform: scale(1.05); }
+        .nav-btn:disabled { background-color: #cbd5e1; color: #94a3b8; cursor: not-allowed; transform: none; }
+
+        .progress-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background-color: #e2e8f0; z-index: 100; }
+        .progress-bar { height: 100%; width: 0%; background-color: #DCA134; transition: width 0.3s ease; }
+        .footer-brand { position: absolute; bottom: 42px; right: 60px; font-family: 'Poppins'; font-weight: 700; color: #665044; font-size: 13px; opacity: 0.7; z-index: 100; }
+        .footer-brand span { color: #5C8A66; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- DIAPOSITIVA 1: PORTADA -->
+        <div class="slide active">
+            <div class="title-layout">
+                <h1>Análisis de Residuos Sólidos<br><span style="color: #7EA479;">Perú 2019–2024</span></h1>
+                <p class="subtitle">Mediante técnicas de Business Intelligence</p>
+                <div style="margin-top: 45px; display: flex; justify-content: center;">
+                    <div style="text-align: left; border-left: 4px solid #DCA134; padding-left: 20px;">
+                        <p style="font-weight: 700; margin: 0; color: #5C8A66;">Integrantes:</p>
+                        <p style="margin: 0; font-size: 18px;">Marx Rojas Rojas</p>
+                        <p style="margin: 0; font-size: 18px;">Joyssie Rivas Ríos</p>
+                        <p style="margin: 10px 0 0 0; font-size: 14px; color: #8C9980;">Universidad del Pacífico | 2026-I</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 2: BI & OLAP -->
+        <div class="slide">
+            <h2 class="slide-title">Marco Teórico: BI & OLAP</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>Business Intelligence (BI)</h3>
+                        <p>Metodologías y tecnologías para transformar datos en bruto en información significativa para decisiones estratégicas (Negash, 2004).</p>
+                        <p><strong>Aplicación:</strong> Se ejecuta sobre los datos de SIGERSOL para dotar al MINAM de una herramienta analítica nacional.</p>
+                    </div>
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-cube"></i></div>
+                        <h3>OLAP y Modelo Dimensional</h3>
+                        <p>Agiliza consultas en grandes volúmenes multidimensionales para hallar patrones complejos (Codd et al., 1993).</p>
+                        <p><strong>Modelo en Estrella:</strong> Estructura de Ralph Kimball que ubica las tablas de hechos (métricas) al centro conectadas a sus dimensiones (contexto).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 3: ETL & DUCKDB -->
+        <div class="slide">
+            <h2 class="slide-title">Marco Teórico: ETL & Almacenamiento</h2>
+            <div class="content-area">
+                <div class="tiled-content">
+                    <div class="tile" style="flex: 1;">
+                        <div class="icon"><i class="fa-solid fa-gears"></i></div>
+                        <h3>Proceso ETL</h3>
+                        <p>Extrae, transforma y carga datos automáticamente. Implementado de forma robusta a través de scripts de Python (`extract.py`, `transform.py`, `load.py`) soportados por pipelines de CI/CD.</p>
+                    </div>
+                    <div class="tile" style="flex: 1;">
+                        <div class="icon"><i class="fa-solid fa-database"></i></div>
+                        <h3>SQL & DuckDB</h3>
+                        <p><strong>SQL:</strong> Lenguaje estándar para calcular indicadores como tasas de valorización y rankings municipales.</p>
+                        <p><strong>DuckDB:</strong> Motor analítico integrado sin servidor. Ideal para consultas rápidas de datamarts en entornos con recursos limitados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 4: ÁREA Y ACTORES -->
+        <div class="slide">
+            <h2 class="slide-title">Descripción del Área y Actores</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h3>Área de Análisis</h3>
+                        <p>Gestión de residuos sólidos municipales en el Perú, regulada por el <strong>D.L. N° 1278</strong> y centralizada digitalmente por el MINAM a través del sistema <strong>SIGERSOL</strong>.</p>
+                    </div>
+                    <div>
+                        <h3>Actores Involucrados</h3>
+                        <ul class="bullet-list">
+                            <li><i class="fa-solid fa-city"></i> <strong>Municipalidades:</strong> Entes operativos encargados de la recolección y transporte. Necesitan información consolidada y comparable.</li>
+                            <li><i class="fa-solid fa-landmark"></i> <strong>MINAM:</strong> Ente rector nacional que define las metas del país y administra la plataforma de reporte.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 5: PROBLEMÁTICA RESIDUOS -->
+        <div class="slide">
+            <h2 class="slide-title">Problemática: Brecha de Infraestructura</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="number-box">
+                        <div class="number">2.72%</div>
+                        <div class="number-label">De residuos valorizados</div>
+                    </div>
+                    <div>
+                        <h3>Una Realidad Crítica</h3>
+                        <p>A pesar de que el <span class="alert-text">77.6%</span> de los 8.7 millones de toneladas anuales tiene potencial de aprovechamiento, la valorización efectiva es mínima (MEF, 2024).</p>
+                        <ul class="bullet-list">
+                            <li><i class="fa-solid fa-circle-exclamation"></i> El <strong>39% de los residuos</strong> termina en botaderos informales.</li>
+                            <li><i class="fa-solid fa-circle-exclamation"></i> Solo <strong>103 rellenos sanitarios</strong> operativos frente a los 375 requeridos.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 6: PROBLEMÁTICA DATOS -->
+        <div class="slide">
+            <h2 class="slide-title">Problemática Central: Brecha de Información</h2>
+            <div class="content-area">
+                <div class="tile">
+                    <h3 style="color: #A62B2B;"><i class="fa-solid fa-triangle-exclamation"></i> El diagnóstico de SIGERSOL</h3>
+                    <p>El MEF califica el flujo de información como no confiable por ser incompleto e inoportuno.</p>
+                    <ul class="bullet-list" style="margin-top: 20px;">
+                        <li><i class="fa-solid fa-ban" style="color: #A62B2B;"></i> <strong>Incumplimiento:</strong> Una auditoría de la Contraloría reveló que el <strong>84% de las municipalidades</strong> supervisadas omitió su obligación legal de reportar.</li>
+                        <li><i class="fa-solid fa-clock-history" style="color: #D36E36;"></i> <strong>Desactualización:</strong> En 2022, solo el <strong>44% de municipios</strong> actualizó sus datos en el sistema, impidiendo una toma de decisiones basada en evidencia sólida.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 7: MODELO DIMENSIONAL - HECHOS -->
+        <div class="slide">
+            <h2 class="slide-title">Modelo Dimensional (I): Tablas de Hechos</h2>
+            <div class="content-area">
+                <p style="margin-top: 0; margin-bottom: 20px; font-weight: bold;">El núcleo analítico implementa un enfoque de <span style="color: #A62B2B;">Constelación de Hechos</span> para modelar procesos independientes correlacionados:</p>
+                <div class="fact-grid">
+
+                    <div class="mini-card fact-card">
+                        <h4><i class="fa-solid fa-recycle" style="color: #A62B2B;"></i> fact_valorizacion</h4>
+                        <p>Registra indicadores de valorización física por tipo de residuo.</p>
+                        <ul>
+                            <li>pob_total / pob_urbana / pob_rural</li>
+                            <li>qresiduos_mun (t/año)</li>
+                            <li>qresiduos_valorizado (t/año)</li>
+                            <li>tasa_valorizacion_pct</li>
+                        </ul>
+                        <div class="grain-badge">Grano: Distrito × Año × Tipo Residuo</div>
+                    </div>
+
+                    <div class="mini-card fact-card">
+                        <h4><i class="fa-solid fa-trash-can" style="color: #A62B2B;"></i> fact_generacion</h4>
+                        <p>Registra tasas y volúmenes de generación de basura doméstica y municipal.</p>
+                        <ul>
+                            <li>pob_total_inei / pob_urbana_inei</li>
+                            <li>generacion_per_capita_dom (kg/hab/día)</li>
+                            <li>generacion_mun_tanio / generacion_mun_tdia</li>
+                            <li>ratio_dom_vs_mun_pct</li>
+                        </ul>
+                        <div class="grain-badge">Grano: Distrito × Año</div>
+                    </div>
+
+                    <div class="mini-card fact-card" style="border-top-color: #522D5B;">
+                        <h4><i class="fa-solid fa-coins" style="color: #522D5B;"></i> fact_gasto</h4>
+                        <p>Registra la ejecución financiera y el presupuesto público acumulado del SIAF.</p>
+                        <ul>
+                            <li>monto_pia (Presupuesto Apertura)</li>
+                            <li>monto_pim (Presupuesto Modificado)</li>
+                            <li>monto_devengado (Ejecutado real)</li>
+                            <li>monto_girado (Pagado)</li>
+                        </ul>
+                        <div class="grain-badge" style="background:#522D5B;">Grano: Distrito × Mes × Entidad × Clasificador × Programa</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 8: MODELO DIMENSIONAL - CONFORMADAS -->
+        <div class="slide">
+            <h2 class="slide-title">Modelo Dimensional (II): Dimensiones Conformadas</h2>
+            <div class="content-area">
+                <p style="margin-top: 0; margin-bottom: 20px; font-weight: bold;">Las <span style="color: #DCA134;">Dimensiones Conformadas</span> son compartidas por las tablas de hechos y actúan como puentes de integración:</p>
+                <div class="conformadas-grid">
+
+                    <div class="mini-card dim-conformada">
+                        <h4><i class="fa-solid fa-earth-americas" style="color: #DCA134;"></i> dim_geografica</h4>
+                        <p>Provee el contexto territorial completo a nivel nacional y maneja la jerarquía regional:</p>
+                        <ul>
+                            <li><strong>ubigeo (PK):</strong> Código estandarizado INEI de 6 dígitos.</li>
+                            <li><strong>distrito / provincia / departamento:</strong> Grafías normalizadas del Estado.</li>
+                            <li><strong>region_natural:</strong> Clasificación geográfica base (Costa / Sierra / Selva).</li>
+                        </ul>
+                    </div>
+
+                    <div class="mini-card dim-conformada">
+                        <h4><i class="fa-solid fa-clock" style="color: #DCA134;"></i> Tiempo e Integración</h4>
+                        <p>Dos dimensiones que solucionan la asincronía temporal de las fuentes:</p>
+                        <ul>
+                            <li><strong>dim_tiempo (Anual):</strong> Controla el ciclo histórico de SIGERSOL (2019-2024). Campos: <code>anio_id</code>, <code>anio</code>, <code>decada</code>, <code>es_ultimo_anio</code>.</li>
+                            <li><strong>dim_tiempo_presupuestal (Mensual):</strong> Registra el flujo financiero del SIAF (72 registros). Campos: <code>tiempo_id</code>, <code>anio</code>, <code>mes</code>, <code>nombre_mes</code>.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 9: MODELO DIMENSIONAL - ESPECÍFICAS -->
+        <div class="slide">
+            <h2 class="slide-title">Modelo Dimensional (III): Dimensiones Específicas</h2>
+            <div class="content-area">
+                <p style="margin-top: 0; margin-bottom: 15px; font-weight: bold;">Dimensiones descriptivas adjuntas a procesos de negocio particulares (Ecosistema de Residuos y SIAF-MEF):</p>
+                <div class="especificas-grid">
+
+                    <div class="mini-card dim-especifica">
+                        <h4><i class="fa-solid fa-dumpster" style="color: #5C8A66;"></i> Contexto Residuos</h4>
+                        <p>Caracterización de municipios e insumos:</p>
+                        <ul>
+                            <li><strong>dim_municipio:</strong> Clasificación fiscal del MEF (A hasta G) y tipo de gobierno local (Provincial/Distrital).</li>
+                            <li><strong>dim_residuo:</strong> Distingue el origen del material valorizado (ORGÁNICO / INORGÁNICO).</li>
+                        </ul>
+                    </div>
+
+                    <div class="mini-card dim-gasto">
+                        <h4><i class="fa-solid fa-building-columns" style="color: #522D5B;"></i> Clasificación del Gasto</h4>
+                        <p>Estructura operativa e institucional pública:</p>
+                        <ul>
+                            <li><strong>dim_entidad:</strong> Nivel de gobierno, sector, pliego y unidad ejecutora.</li>
+                            <li><strong>dim_presupuesto:</strong> Fuente de financiamiento (Canon, Recursos Ordinarios), rubro y clasificadores específicos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mini-card dim-gasto">
+                        <h4><i class="fa-solid fa-leaf" style="color: #522D5B;"></i> Funcional y Climática</h4>
+                        <p>Estrategia y metas presupuestales:</p>
+                        <ul>
+                            <li><strong>dim_programa_funcional:</strong> Programa presupuestal (PP 0036), función, división, grupo funcional y actividad.</li>
+                            <li><strong>dim_cambio_climatico:</strong> Etiquetado estandarizado por tipo de respuesta (Adaptación / Mitigación / Atribución).</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 10: INTEGRACIÓN Y CIERRE -->
+        <div class="slide">
+            <h2 class="slide-title">Nuestra Propuesta: Integración Final</h2>
+            <div class="content-area">
+                <div class="tile" style="border-left: 8px solid #5C8A66;">
+                    <h3>Toma de Decisiones de Alta Precisión</h3>
+                    <p>Gracias a esta arquitectura de Constelación implementada en el mini Data Warehouse, logramos que las dos fuentes de datos conversen perfectamente a pesar de sus diferencias nativas.</p>
+                    <h4 style="margin: 15px 0 5px 0; color: #5C8A66;">Beneficio Estratégico:</h4>
+                    <ul class="bullet-list">
+                        <li><i class="fa-solid fa-chart-line"></i> Monitoreo evolutivo de la valorización a nivel regional y distrital.</li>
+                        <li><i class="fa-solid fa-bullseye"></i> Identificación quirúrgica de <strong>municipios críticos</strong> para saber con exactitud si su baja valorización se debe a falta de presupuesto o ineficiencia de gestión.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 11: PRODUCTO EN PRODUCCIÓN -->
+        <div class="slide">
+            <h2 class="slide-title">Producto Final: Solución Pública en la Nube</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="tile" style="border-left: 8px solid #5C8A66;">
+                        <h3>Acceso sin instalación</h3>
+                        <p>El dashboard está deployado en producción y disponible para cualquier actor institucional desde el navegador:</p>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li><i class="fa-solid fa-landmark"></i> <strong>MINAM:</strong> Monitoreo nacional de valorización y generación</li>
+                            <li><i class="fa-solid fa-city"></i> <strong>Municipalidades:</strong> Comparación de desempeño distrital y regional</li>
+                            <li><i class="fa-solid fa-coins"></i> <strong>MEF:</strong> Correlación entre gasto presupuestal y valorización efectiva</li>
+                        </ul>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                        <div style="background: #5C8A66; color: #FDFCF0; padding: 30px 25px; border-radius: 10px; width: 100%; text-align: center;">
+                            <i class="fa-solid fa-globe" style="font-size: 40px; margin-bottom: 12px; display: block;"></i>
+                            <p style="color: #c8e6c9; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1.5px;">URL de Producción</p>
+                            <p style="color: #FDFCF0; font-weight: 700; font-size: 13px; word-break: break-all; margin: 0; font-family: 'Poppins';">web-production-6d3ad.up.railway.app</p>
+                        </div>
+                        <p style="margin: 0; font-size: 13px; color: #8C9980; text-align: center;">Deployado en Railway · Python · Dash 4 · DuckDB · Gunicorn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interfaz de Controles -->
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+            <button class="nav-btn" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="footer-brand">UNIVERSIDAD <span>DEL PACÍFICO</span></div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        let currentSlideIdx = 0;
+
+        function updateSlides() {
+            slides.forEach((slide, idx) => {
+                if (idx === currentSlideIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            prevBtn.disabled = currentSlideIdx === 0;
+            nextBtn.disabled = currentSlideIdx === slides.length - 1;
+
+            const progressPct = ((currentSlideIdx) / (slides.length - 1)) * 100;
+            progressBar.style.width = `${progressPct}%`;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlideIdx > 0) { currentSlideIdx--; updateSlides(); }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlideIdx < slides.length - 1) { currentSlideIdx++; updateSlides(); }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlideIdx < slides.length - 1) { currentSlideIdx++; updateSlides(); }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlideIdx > 0) { currentSlideIdx--; updateSlides(); }
+            }
+        });
+
+        updateSlides();
+    </script>
+</body>
+</html>

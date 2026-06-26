@@ -10,6 +10,18 @@
 
 ---
 
+## Dashboard Interactivo — Acceso Público
+
+La herramienta analítica está disponible públicamente sin necesidad de instalación:
+
+> **https://web-production-6d3ad.up.railway.app/**
+
+Diseñada para ser utilizada por el MINAM, municipalidades y entidades del Estado directamente desde el navegador, sin configuración local. Permite monitorear la generación y valorización de residuos sólidos a nivel distrital y regional, e identificar municipios críticos correlacionando indicadores físicos con ejecución presupuestal.
+
+**Stack de producción:** Python · Dash 4 · DuckDB · Plotly · Folium · Gunicorn · Railway
+
+---
+
 ## 1. Marco Teórico
 
 ### 1.1 Business Intelligence
